@@ -24,7 +24,7 @@ export default async function handler(req, res) {
         }
       );
       const types = await typesRes.json();
-      console.log(types, "done");
+    
 
       // migrate all types
       for (let i = 0; i < types.length; i++) {
@@ -43,13 +43,14 @@ export default async function handler(req, res) {
       const client = prismic.createClient(process.env.Source_Repo, {});
       let allDocuments = await client.dangerouslyGetAll();
 
-      console.log(allDocuments.length);
+   
       //Migrate documents
       for (let i = 0; i < allDocuments.length; i++) {
-        const document = JSON.stringify(allDocuments[i]);
+        console.log(i,"here")
+        let document = JSON.stringify(allDocuments[i]);
         //Update assets id with new one
         newAssets.forEach((asset) => {
-          document.replaceAll(asset.prevID, asset.id);
+          document=  document.replaceAll(asset.prevID, asset.id);
         });
 
         const r = await fetch("https://migration.prismic.io/documents", {

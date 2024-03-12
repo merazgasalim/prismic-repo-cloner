@@ -30,7 +30,7 @@ export default function AssetsFetcher({ assets, setAssets, setEnabled }) {
         1. Get assets list
       </Button>{" "}
       {assets?.total && (
-        <Text as={"span"}> {assets?.total} assets found. </Text>
+        <Text as={"span"}> {assets?.items.length}/{assets?.total} assets found. </Text>
       )}
     </Box>
   );

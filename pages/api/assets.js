@@ -25,7 +25,7 @@ export default async function handler(req, res) {
         };
 
         const ans = await fetch(
-          "https://asset-api.prismic.io/assets",
+          "https://asset-api.prismic.io/assets?limit=300",
           requestOptions
         );
         const assets = await ans.text();
