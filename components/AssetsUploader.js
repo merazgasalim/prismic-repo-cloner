@@ -40,7 +40,7 @@ import {
         <Button onClick={downloadAssets} isLoading={loader} mb={2} isDisabled={!isEnabled.uploadAssets}>
           3. Upload assets
         </Button>{" "}
-       {isDone&& <Text as={"span"}> All assets have been downloaded successfully </Text>}
+       {isDone&& <Text as={"span"}> All assets have been uploaded successfully </Text>}
       </Box>
     );
   }
