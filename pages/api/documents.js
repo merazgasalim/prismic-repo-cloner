@@ -40,14 +40,15 @@ export default async function handler(req, res) {
       //Get all documents
       const client = prismic.createClient(process.env.Source_Repo, {});
       let allDocuments = await client.dangerouslyGetAll();
+      let failures = 0;
 
       //Migrate documents
       for (let i = 0; i < allDocuments.length; i++) {
         let document = JSON.stringify(allDocuments[i]);
         //Update assets id with new one
-        newAssets.forEach((asset) => {
-          document = document.replaceAll(asset.prevID, asset.id);
-        });
+        for (let j = 0; j < newAssets.length; j++) {
+          document = document.replaceAll(newAssets[j].prevID, newAssets[j].id);
+        }
 
         const r = await fetch("https://migration.prismic.io/documents", {
           method: "POST",
@@ -65,10 +66,14 @@ export default async function handler(req, res) {
         });
         const ans = await r.text();
         console.log(ans);
+        //Number of failures
+        if (ans.search(`"id":`) === -1) failures++;
         await delay(1500);
       }
 
-      return res.status(200).json({ done: true });
+      return res
+        .status(200)
+        .json({ done: true, nbrDocs: allDocuments.length , failures });
     default:
       return res.status(500).json({ reason: "Not allowed" });
   }

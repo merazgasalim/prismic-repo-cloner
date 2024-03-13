@@ -5,6 +5,8 @@ export default function DocumentsMigrator({newAssets,isEnabled}) {
     console.log(newAssets)
   const [loader, setLoader] = useState(false);
   const [isDone, setDone] = useState(false);
+  const[nbrDocs,setNbrDocs]=useState(0)
+  const[failures,setFailures]=useState(0)
   const migrateDocuments = async () => {
     try {
       setLoader(true);
@@ -19,6 +21,8 @@ export default function DocumentsMigrator({newAssets,isEnabled}) {
       console.log(ans);
       if (res.status === 200) {
         setDone(true);
+        setNbrDocs(ans.nbrDocs)
+        setFailures(ans.failures)
       
       } else {
         console.log(ans.reason, ans.err);
@@ -40,7 +44,7 @@ export default function DocumentsMigrator({newAssets,isEnabled}) {
         4. Migrate All Documents
       </Button>{" "}
       {isDone && (
-        <Text as={"span"}> All documents have been migrated successfully </Text>
+        <Text as={"span"}> {nbrDocs-failures}/{nbrDocs} documents have been migrated successfully </Text>
       )}
     </Box>
   );

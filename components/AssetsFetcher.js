@@ -9,8 +9,9 @@ export default function AssetsFetcher({ assets, setAssets, setEnabled }) {
       setLoader(true);
       const res = await fetch("/api/assets");
       const ans = await res.json();
-      console.log(ans);
+
       if (res.status === 200) {
+        console.log(JSON.parse(ans.assets));
         setAssets(JSON.parse(ans.assets));
         setEnabled((prevState) => {
           return { ...prevState, downloadAssets: true };
@@ -30,7 +31,10 @@ export default function AssetsFetcher({ assets, setAssets, setEnabled }) {
         1. Get assets list
       </Button>{" "}
       {assets?.total && (
-        <Text as={"span"}> {assets?.items.length}/{assets?.total} assets found. </Text>
+        <Text as={"span"}>
+          {" "}
+          {assets?.items.length}/{assets?.total} assets found.{" "}
+        </Text>
       )}
     </Box>
   );
