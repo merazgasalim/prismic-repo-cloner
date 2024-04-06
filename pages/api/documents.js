@@ -12,6 +12,28 @@ export default async function handler(req, res) {
       const { newAssets } = req.body;
 
       const token = await getToken();
+      //Get all shared slices
+      const slicesRes = await fetch("https://customtypes.prismic.io/slices", {
+        headers: {
+          repository: process.env.Source_Repo,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const slices = await slicesRes.json();
+      
+      //Migrate all slices
+      for (let i = 0; i < slices.length; i++) {
+        await fetch("https://customtypes.prismic.io/slices/insert", {
+          method: "POST",
+          headers: {
+            repository: process.env.Destination_Repo,
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(slices[i]),
+        });
+      }
+      //return res.status(200).json({ ok: true });
       //Get all types
       const typesRes = await fetch(
         "https://customtypes.prismic.io/customtypes",
@@ -73,7 +95,7 @@ export default async function handler(req, res) {
 
       return res
         .status(200)
-        .json({ done: true, nbrDocs: allDocuments.length , failures });
+        .json({ done: true, nbrDocs: allDocuments.length, failures });
     default:
       return res.status(500).json({ reason: "Not allowed" });
   }
